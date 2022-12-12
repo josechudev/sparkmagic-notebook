@@ -1,0 +1,16 @@
+FROM jupyter/minimal-notebook:python-3.8.8
+USER root
+RUN jupyter labextension install @jupyterlab/git && \
+        pip install --upgrade jupyterlab-git && \
+        jupyter serverextension enable --py jupyterlab_git
+RUN jupyter labextension install @jupyterlab/github
+
+# Add the ${NB_USER} user to UID 1000
+RUN groupadd ${NB_USER} && usermod -aG ${NB_USER} ${NB_USER} && usermod -d /home/${NB_USER} -u 1000 ${NB_USER}
+
+RUN apt-get update && apt-get install -y sudo
+RUN echo 'ALL ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER ${NB_USER}
+
+WORKDIR /home/${NB_USER}/work
