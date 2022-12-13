@@ -1,5 +1,14 @@
 FROM jupyter/minimal-notebook:python-3.8.8
+
 USER root
+
+COPY ./sparkmagic-0.20.0.tar.gz .
+
+RUN pip install sparkmagic-0.20.0.tar.gz && rm sparkmagic-0.20.0.tar.gz
+
+RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
+RUN jupyter labextension install "@jupyter-widgets/jupyterlab-manager"
+RUN jupyter serverextension enable --py sparkmagic
 RUN jupyter labextension install @jupyterlab/git && \
         pip install --upgrade jupyterlab-git
 RUN jupyter labextension install @jupyterlab/github
