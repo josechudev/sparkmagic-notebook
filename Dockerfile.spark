@@ -12,6 +12,8 @@ USER 0
 # - openjdk-8-jdk (or Oracle JDK 8)
 # - Python 2.7+
 # - R 3.x
+
+COPY livy.conf livy.conf
 RUN apt-get update && apt-get install -yq --no-install-recommends --force-yes \
     curl \
     git \
@@ -40,6 +42,8 @@ RUN curl --progress-bar -L --retry 3 \
   && rm -rf "./apache-livy-${LIVY_VERSION}-bin.zip" \
   && mkdir "${LIVY_HOME}/logs" \
   && chown -R root:root "${LIVY_HOME}"
+  
+RUN cp ./livy.conf ${LIVY_CONF_DIR}/livy.conf
 
 EXPOSE 8998
 
